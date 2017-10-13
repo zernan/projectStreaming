@@ -1,15 +1,35 @@
+body {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEiMp6vuogpuIvD8MTe5mE8rHiSbiraBKuySvtJ6Wx4MUu5n6i');
+    background-attachment: fixed;
+}
+
+h3 {
+    text-align: center;
+    vertical-align: center;
+}
+
 .container {
-	display: grid;
+   display: grid;
+   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaMlBQwlb4HyLqKGfsuIXOVr0Hw6lALPNiOm7zxClmO7HRVWvP');
+   background-size: 100% 100%;
+   background-attachment: fixed;
 }
 
-.form {
-    align-content: center;
+.twitch {
+   background-image: url('http://www.wallpapersin4k.org/wp-content/uploads/2017/04/Twitch-Wallpaper-10.jpg');
+   background-size: 100% 100%;
+}
+
+.twitter{
+    background-image: url('http://wallpapercraft.net/wp-content/uploads/2016/06/Twitter-Image-HD.jpg');
+    background-size:100% 100%;
 }
 
 
-.textBox {
+#txtBox {
 	text-align: center;
-	background: rgb(204, 204, 0);
+    border:1px solid #ff0000 ;
+	background: rgb(255,255,255);
 	width:200px;
 }
 
@@ -76,7 +96,7 @@ text-decoration: none;
 color: #31353d ;
 }
 
-#twitter_b {
+/*#twitter_b {
 width: 430px;
 height: 29px;
 background:#c68aeb url(yourimagehere);
