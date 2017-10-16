@@ -24,16 +24,14 @@
 			
 			<h3>Twitch Clips</h3>
 			<div class="twitch">
-				<iframe id="twitchFrame" frameborder="0" scrolling="no" height="350" width=100%>
-				</iframe>
+				
 			</div>
 		</div>	
 
 		<div class="col s12 m5"> <!-- column container for twitter only -->
 				
 				<h3>Twitter Feed</h3>
-				<div class="twitter">			
-					<iframe  id="twitterFrame" height="350" width=100%>
+				<div class="twitter">
 						<div id="twitter">
 							<div id="twitter_t">
 							</div>
@@ -45,7 +43,6 @@
 							</div>
 							</div>
 						</div>
-					</iframe>
 						<div id="twitter_b">
 							
 						</div>
@@ -72,28 +69,93 @@
 </div> <!-- end of class container -->
 
 	<script>
-			let searcher = document.getElementById("searchBtn");
+		
+		let searcher = document.getElementById("searchBtn");
+		let txt = document.getElementById("txtBox");
+		
+		let twitch = document.getElementsByClassName('twitch');
+		let twitter = document.getElementsByClassName('twitter');
+		let colorList = ['red', 'blue', 'green', 'yellow', 'orange'];
 
-    		const seek = (x) => {
-    		  	
-    			let txt = document.getElementById("txtBox");
-    			let twitch = document.getElementById("twitchFrame");
-    			let twit = document.getElementById("twitterFrame");
-    		  
-    			let twitchSource = "https://api.twitch.tv/kraken/streams/" + txt.value + "?client_id=t7yj1dhusvoyzlng9u6p1a4yhw6qsp";
-    			let twitterSource = "https://api.twitter.com/1.1/search/tweets.json?q=%" + txt.value + "&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=4";
-          
-          		console.log(twitchSource);
-    		  	console.log(twitterSource);
-    			
-    			twitch.src = twitchSource;
+		const requestTwitchStreams = (x)=>{
+	     	   	
+			let val = txt.value;
+			let xhr = new XMLHttpRequest();
+			let url = `https://api.twitch.tv/kraken/search/streams?query=${val}`;
+			
+			xhr.onreadystatechange = (e)=> {
+        		if (this.readyState == 4) {
+        			alert('Loaded');
+        			if(this.status == 200){
+            		
+	            		var myChannelItems = JSON.parse(this.responseText);
+	            		
+	            		if(myChannelItems.length > 0){
+		            		for(let i=0; i<myChannelItems; i++){
+		            			let div = document.createElement('div');
+		            			div.style='background:' + colorLit[i%5];
+		            			div.innerHTML = myChannelItems[i];
+		            			twitch.appendChild(div);
+		            		}
+	            		}
+            		}
+            		else{
+            			alert('Status other than 200');
+            		}
+        		}
+        		else
+    	        {
+    	        	alert("Unable to get streams!!!");
+    	        }
+			}
 
-    			twit.src = twitterSource;
+			xhr.open('GET', url, true);
+			xhr.send();
+									
+ 		}
 
-    			}
+		const requestTwitterStreams = (x)=>{
+	     	   
+	     	let val = txt.value;
+			let xhr = new XMLHttpRequest();
+			let url = `https://api.twitter.com/1.1/search/tweets.json?q=%'${val}
+    			&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=4`;
+			
+			xhr.onreadystatechange = (e)=> {
+        		if (this.readyState == 4) {
+        			alert('request Loaded');
+        			if(this.status == 200) {
+            		
+	            		let myTweets = JSON.parse(this.responseText);
+	            		
+	            		if(myTweets.length > 0){
+		            		for(let i=0; i<myTweets; i++){
+		            			let div = document.createElement('div');
+		            			div.style='background:' + colorLit[i%5];
+		            			div.innerHTML = myTweets[i];
+		            			twitter.appendChild(div);
+		            		}
+	            		}
+            		}
+            		else{
+            			alert('Status other than 200');
+            		}
+        		}
+        		else
+    	        {
+    	        	alert("Unable to get requested tweets!!!");
+    	        }
+			}
+
+			xhr.open('GET', url, true);
+			xhr.send();
+									
+ 		}
+			
+			searcher.addEventListener("click", requestTwitchStreams);
+    		searcher.addEventListener("click", requestTwitterStreams);
+
     		
-    		
-    		searcher.addEventListener("click", seek);
 
 
 	</script>

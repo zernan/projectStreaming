@@ -18,11 +18,15 @@ h3 {
 .twitch {
    background-image: url('http://www.wallpapersin4k.org/wp-content/uploads/2017/04/Twitch-Wallpaper-10.jpg');
    background-size: 100% 100%;
+   height:350px;
+   width:100%;
 }
 
 .twitter{
     background-image: url('http://wallpapercraft.net/wp-content/uploads/2016/06/Twitter-Image-HD.jpg');
     background-size:100% 100%;
+    height:350px;
+    width:100%;
 }
 
 
@@ -30,19 +34,19 @@ h3 {
 	text-align: center;
     border:1px solid #ff0000 ;
 	background: rgb(255,255,255);
-	width:200px;
+	width:100%;
 }
 
 #twitter {
 	webkit-border-radius: 5px;
     moz-border-radius: 5px;
     border-radius: 5px;
-    width:430px;
+    width:100%;
     border:1px solid #c9c9c9 ;
 }
 
 #twitter_t {
-    width:405px;
+    width:100%;
     height: 44px;
     background:#c68aeb url();
     color:#fff;
@@ -54,7 +58,7 @@ h3 {
 }
 
 #twitter_m {
-    width: 400px;
+    width: 100%;
     padding: 0 15px;
     background:#f7effc ;
 }
@@ -68,7 +72,7 @@ h3 {
 }
 
 #twitter_update_list {
-    width: 413px;
+    width: 100%;
     padding: 0;
     overflow: hidden;
     font-family: Georgia;
@@ -81,7 +85,7 @@ h3 {
 }
 
 #twitter_update_list li {
-	width: 400px;
+	width: 100%;
 	list-style: none;
 	padding:15px;
 	border-bottom: dotted 1px #ccc;
