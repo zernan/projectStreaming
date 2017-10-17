@@ -68,6 +68,28 @@
 	</div>
 </div> <!-- end of class container -->
 
+<span id="ipaddress"></span>
+
+<script type="text/javascript">
+        window.onload = function () {
+            //Create a SCRIPT element.
+            var script = document.createElement("script");
+ 
+            //Set the Type.
+            script.type = "text/javascript";
+ 
+            //Set the source to the URL the JSON Service.
+            script.src = "https://api.ipify.org?format=jsonp&callback=DisplayIP";
+ 
+           //Append the script element to the HEAD section.
+            document.getElementsByTagName("head")[0].appendChild(script);
+        };
+        
+        function DisplayIP(response) {
+            document.getElementById("ipaddress").innerHTML = "Your IP Address is " + response.ip;
+        }
+</script>
+
 	<script>
 		
 		let searcher = document.getElementById("searchBtn");
@@ -81,14 +103,14 @@
 	     	   	
 			let val = txt.value;
 			let xhr = new XMLHttpRequest();
-			let url = `https://api.twitch.tv/kraken/search/streams?query=${val}`;
-			
+			//let url = `https://api.twitch.tv/kraken/search/streams?query=${val}`;
+			let url = 'https://api.twitch.tv/api/channels/MMDA/panels?client_id=t7yj1dhusvoyzlng9u6p1a4yhw6qsp';
+
 			xhr.onreadystatechange = (e)=> {
-        		if (this.readyState == 4) {
+        		if (this.readyState === 4) {
         			alert('Loaded');
-        			if(this.status == 200){
-            		
-	            		var myChannelItems = JSON.parse(this.responseText);
+        			if(this.status === 200){
+            			var myChannelItems = JSON.parse(this.responseText);
 	            		
 	            		if(myChannelItems.length > 0){
 		            		for(let i=0; i<myChannelItems; i++){
@@ -118,15 +140,14 @@
 	     	   
 	     	let val = txt.value;
 			let xhr = new XMLHttpRequest();
-			let url = `https://api.twitter.com/1.1/search/tweets.json?q=%'${val}
+			let url = `https://api.twitter.com/1.1/search/tweets.json?q=%${val}
     			&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=4`;
 			
 			xhr.onreadystatechange = (e)=> {
         		if (this.readyState == 4) {
         			alert('request Loaded');
         			if(this.status == 200) {
-            		
-	            		let myTweets = JSON.parse(this.responseText);
+            			let myTweets = JSON.parse(this.responseText);
 	            		
 	            		if(myTweets.length > 0){
 		            		for(let i=0; i<myTweets; i++){
