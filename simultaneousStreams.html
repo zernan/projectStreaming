@@ -24,7 +24,6 @@
 			
 			<h3>Twitch Clips</h3>
 			<div class="twitch">
-				
 			</div>
 		</div>	
 
@@ -70,48 +69,58 @@
 
 <span id="ipaddress"></span>
 
-<script type="text/javascript">
-        window.onload = function () {
-            //Create a SCRIPT element.
-            var script = document.createElement("script");
- 
-            //Set the Type.
-            script.type = "text/javascript";
- 
-            //Set the source to the URL the JSON Service.
-            script.src = "https://api.ipify.org?format=jsonp&callback=DisplayIP";
- 
-           //Append the script element to the HEAD section.
-            document.getElementsByTagName("head")[0].appendChild(script);
-        };
-        
-        function DisplayIP(response) {
-            document.getElementById("ipaddress").innerHTML = "Your IP Address is " + response.ip;
-        }
-</script>
-
-	<script>
+ 	<script>
 		
 		let searcher = document.getElementById("searchBtn");
 		let txt = document.getElementById("txtBox");
 		
-		let twitch = document.getElementsByClassName('twitch');
-		let twitter = document.getElementsByClassName('twitter');
+		let twitch = document.getElementsByClassName('twitch')[0];
+		let twitter = document.getElementsByClassName('twitter')[0];
+		let frame = document.getElementById("iframeTwitch");
 		let colorList = ['red', 'blue', 'green', 'yellow', 'orange'];
 
-		const requestTwitchStreams = (x)=>{
-	     	   	
-			let val = txt.value;
-			let xhr = new XMLHttpRequest();
-			//let url = `https://api.twitch.tv/kraken/search/streams?query=${val}`;
-			let url = 'https://api.twitch.tv/api/channels/MMDA/panels?client_id=t7yj1dhusvoyzlng9u6p1a4yhw6qsp';
+		function displayTwitchResponse(response) {
+            	//twitch.innerHTML = response.text;
+            	alert(response);
+        	}
 
-			xhr.onreadystatechange = (e)=> {
-        		if (this.readyState === 4) {
+		const requestTwitchStreams = (x)=>{
+	     	
+	     	let val = txt.value;
+			//let xhr = new XMLHttpRequest();
+			
+			let url = "https://api.twitch.tv/kraken/streams?channel=" + val + "&client_id=t7yj1dhusvoyzlng9u6p1a4yhw6qsp&redirect_uri=http://localhost&redirect&scope=user_read";
+			let requestHeader = {
+				client_id: 't7yj1dhusvoyzlng9u6p1a4yhw6qsp'
+			}
+			
+			var requestSettings = { 
+				method: 'GET',
+            	headers: requestHeader,
+               	mode: 'no-cors',
+               	cache: 'default' 
+            };
+
+			fetch(url, requestSettings)
+					.then( resp => {
+        					resp.json()
+        						.then(function(data) {  
+                    				console.log(data.results);
+                    				alert(data.results);
+        						});
+  					}).catch(function(error) {
+  						console.log('There has been a problem with your fetch operation: ' + error.message);
+  						alert('There has been a problem with your fetch operation: ' + error.message);
+  						});
+
+			
+			/*xhr.onreadystatechange = (e)=> {
+
+				if (this.readyState === 4) {
         			alert('Loaded');
         			if(this.status === 200){
-            			var myChannelItems = JSON.parse(this.responseText);
-	            		
+            			var myChannelItems = JSON.parse(this.response);
+	            		alert("response");
 	            		if(myChannelItems.length > 0){
 		            		for(let i=0; i<myChannelItems; i++){
 		            			let div = document.createElement('div');
@@ -123,27 +132,54 @@
             		}
             		else{
             			alert('Status other than 200');
+            			//alert(this.response);
             		}
         		}
         		else
     	        {
-    	        	alert("Unable to get streams!!!");
+    	        	alert("Ready State:" + this.readyState);
+    	        	//alert(this.response);
     	        }
 			}
 
 			xhr.open('GET', url, true);
-			xhr.send();
+			xhr.send();*/
 									
  		}
 
-		const requestTwitterStreams = (x)=>{
-	     	   
+ 		const requestTwitterStreams = (x) => {
+	     	 
 	     	let val = txt.value;
-			let xhr = new XMLHttpRequest();
-			let url = `https://api.twitter.com/1.1/search/tweets.json?q=%${val}
-    			&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=4`;
+	     	
+	     	//let url = "https://api.twitter.com/1.1/search/tweets.json?q=%23freebandnames&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=4"; //`https://api.twitter.com/1.1/search/tweets.json?q=%${val}`;
+	     	
+	     	let url = "https://publish.twitter.com/oembed?url=https://twitter.com/ABSCBN/status/920922467509723136"
+	     	let requestHeader = {
+	     		'Authorization': 'Bearer 917220602313818112-3CE7DwMq4NLuO7Fpnmbpd63tHzrfyct'
+	     	}
+			//let xhr = new XMLHttpRequest();
 			
-			xhr.onreadystatechange = (e)=> {
+			var requestSettings = { 
+				method: 'GET',
+            	headers: requestHeader,
+               	mode: 'no-cors',
+               	cache: 'default' 
+            };
+
+
+			fetch(url, requestSettings)
+					.then( resp => {
+        					resp.json()
+        						.then(function(data) {  
+                    				console.log(data.results);
+                    				alert(data.results);
+        						});
+  					}).catch(function(error) {
+  						console.log('There has been a problem with your fetch operation: ' + error.message);
+  						alert('There has been a problem with your fetch operation: ' + error.message);
+  						});
+
+			/*xhr.onreadystatechange = (e)=> {
         		if (this.readyState == 4) {
         			alert('request Loaded');
         			if(this.status == 200) {
@@ -169,25 +205,18 @@
 			}
 
 			xhr.open('GET', url, true);
-			xhr.send();
+			xhr.send();*/
 									
  		}
+
+ 		
 			
 			searcher.addEventListener("click", requestTwitchStreams);
     		searcher.addEventListener("click", requestTwitterStreams);
-
     		
-
-
 	</script>
 	
-	<script src= "http://player.twitch.tv/js/embed/v1.js"></script>
-	<script src="https://api.twitch.tv/kraken"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-	<script src="https://api.twitter.com/1/statuses/user_timeline/zmverceles.json?" type="text/javascript"></script>
-	<script src="http://twitter.com/javascripts/blogger.js" type="text/javascript"></script>
-
-
-
+	
 </body>
 </html>
