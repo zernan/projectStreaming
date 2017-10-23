@@ -13,25 +13,22 @@
 </head>
 
 <body>
-<div class="container">
-	<div class="row" align="center"> <!-- header row -->
+<div class="container" data-drop-target="true" ondrop="dropIt(event);" ondragover="event.preventDefault();">
+
+	<h2 align="center">STREAMING WEB APP</h2>
 	
-			<h2>STREAMING WEB APP</h2>
-	
-	</div>
-	<div class="row"> <!-- twitch and twitter display row -->
-		<div class="col s12 m7"> <!-- column container for twitch only -->
+		<div id="dragAndDrop1" draggable="true" ondragstart="dragIt(event);">
 			
 			<h3>Twitch Clips</h3>
 			<div class="twitch">
 			</div>
 		</div>	
 
-		<div class="col s12 m5"> <!-- column container for twitter only -->
+		<div id="dragAndDrop2" draggable="true" ondragstart="dragIt(event);">
 				
 				<h3>Twitter Feed</h3>
 				<div class="twitter">
-						<div id="twitter">
+						<!-- <div id="twitter">
 							<div id="twitter_t">
 							</div>
 							<div id="twitter_m">
@@ -44,32 +41,84 @@
 						</div>
 						<div id="twitter_b">
 							
-						</div>
+						</div> -->
 				</div>
-		</div> <!-- end of 2nd class "col" -->
-				
-	</div> <!-- End of class "row" -->
-	<div class="row">
-		<div class="col s4">
-			
 		</div>
-		<div class="col s4">
-			<div class="form">
-				<h5>Type keyword to search both streams</h5>
+				
+		
+		<div id="dragAndDrop3" draggable="true" ondragstart="dragIt(event);" align="center">
+				<h5>Type keyword to search streams</h5>
 				<input type="text" id="txtBox"/>
 				<button id="searchBtn" height=100px width=200px>Search</button>
 			<br>
 		</div>
-		</div>
-		<div class="col s4">
-			
-		</div>
-	</div>
+		
 </div> <!-- end of class container -->
+<!--<div class="recipient" data-drop-target="true" ondrop="dropIt(event);" ondragover="event.preventDefault();">
+</div> -->	
 
-<span id="ipaddress"></span>
+<script>
 
- 	<script>
+		
+	let dragIt = function(event) {
+		
+		event.dataTransfer.setData("Text", event.target.id);
+	}
+
+	let dropIt = function(event) {
+		
+		let passedData = event.dataTransfer.getData("Text");
+		let elem = document.getElementById(passedData);
+		event.target.appendChild(elem);
+		event.preventDefault();
+		return false;
+	}
+
+	let twitch = getElementById("dragAndDrop1");
+	let twitter = getElementById("dragAndDrop2");
+	let searcher = getElementById("dragAndDrop3");
+
+	/*let startX = 0;
+ 	let startY = 0;
+ 	let offsetX = 0;
+  	let offsetY = 0;
+ 	let	temp;
+ 
+
+	let mm = function(e) {
+    	if (e == null)
+    		let e = window.event;
+    		
+    	temp.style.left = (offsetX + e.clientX - startX) + 'px';
+    	temp.style.top = (offsetY + e.clientY - startY) + 'px';
+	}*/
+	
+	let md = function(event){
+		var target = e.target != null ? e.target : e.srcElement;
+    	if (target.id == 'dragAndDrop1' || target.id == 'dragAndDrop2' || target.id == 'dragAndDrop3') {
+    		
+    		startX = e.clientX;
+    		startY = e.clientY;
+ 
+    		offsetX = parseInt(target.style.left);
+    		offsetX = null || isNaN(_offsetX) ? 0 : _offsetX;
+    		offsetY = parseInt(target.style.top);
+    		offsetY = null || isNaN(_offsetY) ? 0 : _offsetY;
+ 
+    		temp = target;
+ 
+    		//window.onmousemove = mm;
+    		return false;
+    	}
+	}
+
+	twitch.addEventListener("mousedown", md);
+	twitter.addEventListener("mousedown", md);
+	searcher.addEventListener("mousedown", md);
+
+	</script>
+
+	<!--<script>
 		
 		let searcher = document.getElementById("searchBtn");
 		let txt = document.getElementById("txtBox");
@@ -79,42 +128,14 @@
 		let frame = document.getElementById("iframeTwitch");
 		let colorList = ['red', 'blue', 'green', 'yellow', 'orange'];
 
-		function displayTwitchResponse(response) {
-            	//twitch.innerHTML = response.text;
-            	alert(response);
-        	}
-
-		const requestTwitchStreams = (x)=>{
+		function requestTwitchStreams {
 	     	
 	     	let val = txt.value;
-			//let xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			
 			let url = "https://api.twitch.tv/kraken/streams?channel=" + val + "&client_id=t7yj1dhusvoyzlng9u6p1a4yhw6qsp&redirect_uri=http://localhost&redirect&scope=user_read";
-			let requestHeader = {
-				client_id: 't7yj1dhusvoyzlng9u6p1a4yhw6qsp'
-			}
 			
-			var requestSettings = { 
-				method: 'GET',
-            	headers: requestHeader,
-               	mode: 'no-cors',
-               	cache: 'default' 
-            };
-
-			fetch(url, requestSettings)
-					.then( resp => {
-        					resp.json()
-        						.then(function(data) {  
-                    				console.log(data.results);
-                    				alert(data.results);
-        						});
-  					}).catch(function(error) {
-  						console.log('There has been a problem with your fetch operation: ' + error.message);
-  						alert('There has been a problem with your fetch operation: ' + error.message);
-  						});
-
-			
-			/*xhr.onreadystatechange = (e)=> {
+			xhr.onreadystatechange = (e)=> {
 
 				if (this.readyState === 4) {
         			alert('Loaded');
@@ -143,43 +164,20 @@
 			}
 
 			xhr.open('GET', url, true);
-			xhr.send();*/
+			xhr.send();
 									
  		}
 
- 		const requestTwitterStreams = (x) => {
+ 		function requestTwitterStreams {
 	     	 
 	     	let val = txt.value;
 	     	
-	     	//let url = "https://api.twitter.com/1.1/search/tweets.json?q=%23freebandnames&since_id=24012619984051000&max_id=250126199840518145&result_type=mixed&count=4"; //`https://api.twitter.com/1.1/search/tweets.json?q=%${val}`;
+	     	let url = "https://publish.twitter.com/oembed?url=https://twitter.com/" + val;
 	     	
-	     	let url = "https://publish.twitter.com/oembed?url=https://twitter.com/ABSCBN/status/920922467509723136"
-	     	let requestHeader = {
-	     		'Authorization': 'Bearer 917220602313818112-3CE7DwMq4NLuO7Fpnmbpd63tHzrfyct'
-	     	}
-			//let xhr = new XMLHttpRequest();
+			let xhr = new XMLHttpRequest();
 			
-			var requestSettings = { 
-				method: 'GET',
-            	headers: requestHeader,
-               	mode: 'no-cors',
-               	cache: 'default' 
-            };
-
-
-			fetch(url, requestSettings)
-					.then( resp => {
-        					resp.json()
-        						.then(function(data) {  
-                    				console.log(data.results);
-                    				alert(data.results);
-        						});
-  					}).catch(function(error) {
-  						console.log('There has been a problem with your fetch operation: ' + error.message);
-  						alert('There has been a problem with your fetch operation: ' + error.message);
-  						});
-
-			/*xhr.onreadystatechange = (e)=> {
+			
+			xhr.onreadystatechange = (e)=> {
         		if (this.readyState == 4) {
         			alert('request Loaded');
         			if(this.status == 200) {
@@ -205,16 +203,18 @@
 			}
 
 			xhr.open('GET', url, true);
-			xhr.send();*/
+			xhr.send();
 									
  		}
 
  		
 			
-			searcher.addEventListener("click", requestTwitchStreams);
-    		searcher.addEventListener("click", requestTwitterStreams);
+			//searcher.addEventListener("click", requestTwitchStreams);
+    		//searcher.addEventListener("click", requestTwitterStreams);
     		
-	</script>
+	</script> -->
+
+	
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 	
