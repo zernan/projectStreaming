@@ -17,38 +17,33 @@ h3{
 }
 
 #dragAndDrop1{
-    width:350px;
     position:absolute;
+    background-image: url('http://www.wallpapersin4k.org/wp-content/uploads/2017/04/Twitch-Wallpaper-10.jpg');
+    background-size: 100% 100%;
+    height:350px;
+    width:350px;
     top:100px;
     left:50px;
 }
 
 #dragAndDrop2{
-    width:350px;
     position:absolute;
+    background-image: url('http://wallpapercraft.net/wp-content/uploads/2016/06/Twitter-Image-HD.jpg');
+    background-size:100% 100%;
+    height:350px;
+    width:350px;
     top:100px;
     right:50px;
 } 
 
 #dragAndDrop3 {
-    width:400px;
     position:absolute;
+    width:400px;
     bottom:50px;
     right:250px;
 }
 
-.twitch {
-   background-image: url('http://www.wallpapersin4k.org/wp-content/uploads/2017/04/Twitch-Wallpaper-10.jpg');
-   background-size: 100% 100%;
-   height:350px;
-   width:350px;
-}
-
 .twitter{
-    background-image: url('http://wallpapercraft.net/wp-content/uploads/2016/06/Twitter-Image-HD.jpg');
-    background-size:100% 100%;
-    height:350px;
-    width:350px;
 }
 
 
