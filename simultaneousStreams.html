@@ -13,20 +13,24 @@
 </head>
 
 <body>
-<div class="container">
+<div class='container'>
 
-	<h2 align="center">STREAMING WEB APP</h2>
+	<h4 align='center'>STREAMING WEB APP</h4>
 	
-	<div id="dragAndDrop1" class="drag"	draggable="true">
+	<div id='dragAndDrop1' class='drag'	draggable='true'>
 			
-			<h3>Twitch Clips</h3>
-			<div class="twitch"></div>
+			<!--<h3>Twitch Clips</h3> -->
+			<div class='twitch'></div>
 	</div>	
 
-	<div id="dragAndDrop2" class="drag" draggable="true">
+	<div>
+		<p id='coordinates'>COORDINATES</p>
+	</div>
+
+	<div id='dragAndDrop2' class='drag' draggable='true'>
 				
-		<h3>Twitter Feed</h3>
-		<div class="twitter">
+		<!--<h3>Twitter Feed</h3> -->
+		<div class='twitter'>
 			<!-- <div id="twitter">
 				<div id="twitter_t">
 				</div>
@@ -43,10 +47,10 @@
 	</div>
 				
 		
-	<div id="dragAndDrop3" class="drag" draggable="true" align="center">
+	<div id='dragAndDrop3' class='drag' draggable='true' align='center'>
 				<h5>Type keyword to search streams</h5>
-				<input type="text" id="txtBox"/>
-				<button id="searchBtn" height=100px width=200px>Search</button>
+				<input type='text' id='txtBox'/>
+				<button id='searchBtn' height=100px width=200px>Search</button>
 	</div>
 		
 </div> <!-- end of class container -->
@@ -61,14 +65,25 @@
  	let	_dragElement;
  	let _oldZIndex = 0;
  	
+ 	//get blue wave container coordinates
+    let containerRect = document.getElementsByClassName('container')[0].getBoundingClientRect();
+    
  	document.onmousedown = OnMouseDown;
  	document.onmouseup = OnMouseUp;
- 	
-	function ExtractNumber(value) {
+
+ 	function getOffset(elem) {
+  		elem = elem.getBoundingClientRect();
+  		return {
+    		left: elem.left + window.scrollX,
+    		top: elem.top + window.scrollY
+  		}
+	}
+
+ 	function ExtractNumber(value) {
 	
     	var n = parseInt(value);
-	
-    	return n == null || isNaN(n) ? 0 : n;
+		
+		return n == null || isNaN(n) ? 0 : n;
 	}
 
 	
@@ -76,16 +91,28 @@
 	
     if (e == null) 
         e = window.event; 
-
+    
     	// drag code
     	_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
     	_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
-    
+    	
+    	//alert("dragElement.style.left= " +_dragElement.style.left+ ", dragElement.style.top= " + _dragElement.style.top);
+
+    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n startXY: ' + _startX + ',' + _startY;
     }
 
 	function OnMouseUp(e){
 	
 		if (_dragElement != null) {
+
+			if(_dragElement.style.top < '0px'){
+				_dragElement.style.top = '0px';
+			}
+
+			if(_dragElement.style.left < '0px'){
+				_dragElement.style.left = '0px';
+			}			
+
     		
     		_dragElement.style.zIndex = _oldZIndex;
 
@@ -94,7 +121,6 @@
         	document.onselectstart = null;
         	_dragElement.ondragstart = null;
         	_dragElement = null;
-        
         }
 	}
 	
@@ -105,21 +131,34 @@
 			e = window.event;
 		}
 		
-		e.stopPropagation();
+		//e.stopPropagation();
 
 		let target = e.target != null ? e.target : e.srcElement;
 
-		if (target.className == "drag") {
+		if (target.className == 'drag') {
     	
-    		//alert("MouseDown:target => drag");
-    		
     		// grab the mouse position
         	_startX = e.clientX;
         	_startY = e.clientY;
-
+        	//alert("mouse position: " + _startX + ", " + _startY);
+        	
         	// grab the clicked element's position
-			_offsetX = ExtractNumber(target.style.left);
-        	_offsetY = ExtractNumber(target.style.top);
+			//_offsetX = ExtractNumber(target.style.left);
+        	//_offsetY = ExtractNumber(target.style.top);
+
+        	_offsetX = ExtractNumber(target.getBoundingClientRect().left);
+        	_offsetY = ExtractNumber(target.getBoundingClientRect().top);
+        	
+        	//alert("element position: " + target.style.left + ", " + target.style.top + ", "+ target.style.right + ", " + target.style.bottom);
+        	//alert("offset position: " + _offsetX + ", " + _offsetY);
+
+        	let containerElement = document.getElementsByClassName('container')[0];
+        	let containerRect = containerElement.getBoundingClientRect();
+        	//alert(" Container: left= " + containerRect.left + ", top= " + containerRect.top + ", right= " + containerRect.right + ", bottom= " + containerRect.bottom);
+
+
+        	let rect = target.getBoundingClientRect(); 
+        	//alert("Drag Element: left= " + rect.left + ", top= " + rect.top + ", right= " + rect.right + ", bottom= " + rect.bottom);
         	//alert("offsetXY = " + _offsetX + ", " + _offsetY + "\n TargetLeftTop = " + target.style.left + ", " + target.style.top);
 
         	// bring the clicked element to the front while it is being dragged
@@ -147,7 +186,7 @@
     
 	</script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js'></script>
 	
 </body>
 </html>

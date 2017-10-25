@@ -13,7 +13,7 @@ h3{
    background-attachment: fixed;
    display:grid;
    position:relative;
-   height:800px;
+   height:1000px;
 }
 
 #dragAndDrop1{
@@ -22,7 +22,7 @@ h3{
     background-size: 100% 100%;
     height:350px;
     width:350px;
-    top:100px;
+    top:70px;
     left:50px;
 }
 
@@ -32,15 +32,23 @@ h3{
     background-size:100% 100%;
     height:350px;
     width:350px;
-    top:100px;
+    top:70px;
     right:50px;
 } 
 
 #dragAndDrop3 {
     position:absolute;
     width:400px;
-    bottom:50px;
+    bottom:450px;
     right:250px;
+}
+
+#coordinates {
+    position:absolute;
+    width:200px;
+    bottom:310px;
+    right:350px;
+    background-color: rgb(255,255,255);
 }
 
 .twitter{
