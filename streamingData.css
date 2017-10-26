@@ -45,6 +45,7 @@ h3{
 
 #coordinates {
     position:absolute;
+    height:auto;
     width:200px;
     bottom:310px;
     right:350px;

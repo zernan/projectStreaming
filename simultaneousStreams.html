@@ -64,9 +64,10 @@
   	let _offsetY = 0;
  	let	_dragElement;
  	let _oldZIndex = 0;
+ 	let isDown = false;
  	
  	//get blue wave container coordinates
-    let containerRect = document.getElementsByClassName('container')[0].getBoundingClientRect();
+    const containerRect = document.getElementsByClassName('container')[0].getBoundingClientRect();
     
  	document.onmousedown = OnMouseDown;
  	document.onmouseup = OnMouseUp;
@@ -93,16 +94,19 @@
         e = window.event; 
     
     	// drag code
-    	_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
-    	_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
+    	//_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
+    	//_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
     	
-    	//alert("dragElement.style.left= " +_dragElement.style.left+ ", dragElement.style.top= " + _dragElement.style.top);
+    	_dragElement.style.left = (e.clientX - containerRect.left) + 'px';
+    	_dragElement.style.top = (e.clientY) + 'px';
+    	
+    	//alert("dragElement.style.left= " +_dragElement.style.left+ ", dragElement.style.top= " + _dragElement.style.top + "dragElement.width= " + e.target.width+ ", dragElement.height= " + e.target.height);
 
-    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n startXY: ' + _startX + ',' + _startY;
+    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n startXY: ' + _startX + ',' + _startY + '\n targetOffsetXY: ' + e.target.offsetLeft + ',' + e.target.offsetTop;
     }
 
 	function OnMouseUp(e){
-	
+		
 		if (_dragElement != null) {
 
 			if(_dragElement.style.top < '0px'){
@@ -131,12 +135,17 @@
 			e = window.event;
 		}
 		
+		isDown = true;
+
 		//e.stopPropagation();
 
 		let target = e.target != null ? e.target : e.srcElement;
 
 		if (target.className == 'drag') {
-    	
+    		
+    		_offsetX = target.offsetLeft - e.clientX;
+    		_offsetY = target.offsetTop - e.clientY;
+
     		// grab the mouse position
         	_startX = e.clientX;
         	_startY = e.clientY;
@@ -146,8 +155,8 @@
 			//_offsetX = ExtractNumber(target.style.left);
         	//_offsetY = ExtractNumber(target.style.top);
 
-        	_offsetX = ExtractNumber(target.getBoundingClientRect().left);
-        	_offsetY = ExtractNumber(target.getBoundingClientRect().top);
+        	//_offsetX = ExtractNumber(target.getBoundingClientRect().left);
+        	//_offsetY = ExtractNumber(target.getBoundingClientRect().top);
         	
         	//alert("element position: " + target.style.left + ", " + target.style.top + ", "+ target.style.right + ", " + target.style.bottom);
         	//alert("offset position: " + _offsetX + ", " + _offsetY);
