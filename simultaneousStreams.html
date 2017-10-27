@@ -64,7 +64,9 @@
   	let _offsetY = 0;
  	let	_dragElement;
  	let _oldZIndex = 0;
+ 	
  	let isDown = false;
+ 	let mouseOffset;
  	
  	//get blue wave container coordinates
     const containerRect = document.getElementsByClassName('container')[0].getBoundingClientRect();
@@ -72,13 +74,61 @@
  	document.onmousedown = OnMouseDown;
  	document.onmouseup = OnMouseUp;
 
+ 	function getMouseCoordinates(e) {
+ 		
+ 		if(e.pageX || e.pageY){ 
+ 			return {
+ 				x:e.pageX, y:e.pageY
+ 			}; 
+	    }
+
+	    //if scrolled, get the amount of scroll done on the docu and add that to the cordinates
+		//since the mouse coordinates are relative to the current window view
+		return { 
+	        x:e.clientX + document.body.scrollLeft, 
+	        y:e.clientY + document.body.scrollTop 
+	    }; 
+ 	}
+
  	function getOffset(elem) {
   		elem = elem.getBoundingClientRect();
+  		
   		return {
     		left: elem.left + window.scrollX,
     		top: elem.top + window.scrollY
   		}
 	}
+
+	function getMouseOffset(target, e){ 
+		
+	    if(e == null)
+	      e = window.event; 
+	    
+	    let docPos    = getPosition(target); 
+	    let mousePos  = getMouseCoordinates(e); 
+	    return {
+	    	x:mousePos.x - docPos.x, y:mousePos.y - docPos.y
+	    }; 
+	    
+	} 
+	
+	function getPosition(e){ 
+		
+	    var left = 0; 
+	    var top  = 0; 
+	    while (e.offsetParent){ 
+	        left += e.offsetLeft; 
+	        top  += e.offsetTop; 
+	        e     = e.offsetParent; 
+	    } 
+
+	    left += e.offsetLeft; 
+	    top  += e.offsetTop; 
+
+	    return {
+	    	x:left, y:top
+	    }; 
+	} 
 
  	function ExtractNumber(value) {
 	
@@ -90,10 +140,20 @@
 	
 	function OnMouseMove(e){
 	
-    if (e == null) 
-        e = window.event; 
-    
-    	// drag code
+    	if (e == null) 
+        	e = window.event; 
+
+        // drag code
+
+        //implementation of the newly added functions (for fixing because it did not do dragging at all)
+    	let mousePos = getMouseCoordinates(e); 
+	    
+		/*if(_dragElement){ 
+	        _dragElement.style.position = 'absolute'; 
+	        _dragElement.style.top      = mousePos.y - mouseOffset.y; 
+	        _dragElement.style.left     = mousePos.x - mouseOffset.x; 
+	    }*/    
+    	
     	//_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
     	//_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
     	
@@ -102,7 +162,7 @@
     	
     	//alert("dragElement.style.left= " +_dragElement.style.left+ ", dragElement.style.top= " + _dragElement.style.top + "dragElement.width= " + e.target.width+ ", dragElement.height= " + e.target.height);
 
-    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n startXY: ' + _startX + ',' + _startY + '\n targetOffsetXY: ' + e.target.offsetLeft + ',' + e.target.offsetTop;
+    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n startXY: ' + _startX + ',' + _startY + '\n targetOffsetXY: ' + e.target.offsetLeft + ',' + e.target.offsetTop + '\n mousePosition: ' + mousePos.x + ',' + mousePos.y + '\n mouseOffsetXY: ' + mouseOffset.x + ',' + mouseOffset.y;
     }
 
 	function OnMouseUp(e){
@@ -142,6 +202,10 @@
 		let target = e.target != null ? e.target : e.srcElement;
 
 		if (target.className == 'drag') {
+			
+			//get mouse offset
+			mouseOffset = getMouseOffset(target, e);
+			///alert(mouseOffset);
     		
     		_offsetX = target.offsetLeft - e.clientX;
     		_offsetY = target.offsetTop - e.clientY;
