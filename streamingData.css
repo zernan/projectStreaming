@@ -13,7 +13,7 @@ h3{
    background-attachment: fixed;
    display:grid;
    position:relative;
-   height:1000px;
+   height:670px;
 }
 
 #dragAndDrop1{
@@ -39,16 +39,16 @@ h3{
 #dragAndDrop3 {
     position:absolute;
     width:400px;
-    bottom:450px;
+    top:500px;
     right:250px;
 }
 
 #coordinates {
     position:absolute;
     height:auto;
-    width:200px;
-    bottom:310px;
-    right:350px;
+    width:180px;
+    left:10px;
+    top:30px;
     background-color: rgb(255,255,255);
 }
 

@@ -23,9 +23,7 @@
 			<div class='twitch'></div>
 	</div>	
 
-	<div>
-		<p id='coordinates'>COORDINATES</p>
-	</div>
+	
 
 	<div id='dragAndDrop2' class='drag' draggable='true'>
 				
@@ -54,6 +52,9 @@
 	</div>
 		
 </div> <!-- end of class container -->
+<div>
+		<p id='coordinates'>COORDINATES</p>
+</div>
 
 <script>
 
@@ -69,7 +70,8 @@
  	let mouseOffset;
  	
  	//get blue wave container coordinates
-    const containerRect = document.getElementsByClassName('container')[0].getBoundingClientRect();
+ 	let cont = document.getElementsByClassName('container')[0];
+    let containerRect = cont.getBoundingClientRect();
     
  	document.onmousedown = OnMouseDown;
  	document.onmouseup = OnMouseUp;
@@ -147,36 +149,47 @@
 
         //implementation of the newly added functions (for fixing because it did not do dragging at all)
     	let mousePos = getMouseCoordinates(e); 
-	    
-		/*if(_dragElement){ 
-	        _dragElement.style.position = 'absolute'; 
-	        _dragElement.style.top      = mousePos.y - mouseOffset.y; 
-	        _dragElement.style.left     = mousePos.x - mouseOffset.x; 
-	    }*/    
-    	
-    	//_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
-    	//_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
-    	
-    	_dragElement.style.left = (e.clientX - containerRect.left) + 'px';
-    	_dragElement.style.top = (e.clientY) + 'px';
-    	
-    	//alert("dragElement.style.left= " +_dragElement.style.left+ ", dragElement.style.top= " + _dragElement.style.top + "dragElement.width= " + e.target.width+ ", dragElement.height= " + e.target.height);
 
-    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n startXY: ' + _startX + ',' + _startY + '\n targetOffsetXY: ' + e.target.offsetLeft + ',' + e.target.offsetTop + '\n mousePosition: ' + mousePos.x + ',' + mousePos.y + '\n mouseOffsetXY: ' + mouseOffset.x + ',' + mouseOffset.y;
+    	//current element position taking into consideration mouse click position and window scrolls 
+    	_dragElement.style.left = (e.clientX - containerRect.left - mouseOffset.x + window.scrollX) + 'px';
+    	_dragElement.style.top = (e.clientY - mouseOffset.y + window.scrollY) + 'px';
+    	
+    	document.getElementById('coordinates').innerHTML = 'clientXY: ' + e.clientX + ',' + e.clientY + '\n dragElementXY: ' + _dragElement.style.left + ',' + _dragElement.style.top + '\n offsetXY:' + _offsetX + ',' + _offsetY + '\n targetOffsetXY: ' + e.target.offsetLeft + ',' + e.target.offsetTop + '\n mousePosition: ' + mousePos.x + ',' + mousePos.y + '\n mouseOffsetXY: ' + mouseOffset.x + ',' + mouseOffset.y;
     }
 
 	function OnMouseUp(e){
 		
 		if (_dragElement != null) {
 
+			let elementRect = _dragElement.getBoundingClientRect();			
+			let leftPos = elementRect.left - containerRect.left;
+			let topPos = elementRect.top - containerRect.top;
+			let rightPos = elementRect.right - containerRect.right;
+			let bottomPos = elementRect.bottom - containerRect.bottom;
+
+			//alert(_dragElement.style.left + ',' + elementRect.left + ',' + rightPos);
+			//alert('bottomPos =' + bottomPos + '\n elementBottom=' + elementRect.bottom + '\n container bottom=' + containerRect.bottom);
+
+			if(rightPos > 0){
+				
+				_dragElement.style.left = (elementRect.left - rightPos - containerRect.left) + 'px';
+			}
+
+			if(bottomPos > 0){
+				
+				_dragElement.style.top = (elementRect.top - bottomPos + window.scrollY) + 'px';
+			}
+			
 			if(_dragElement.style.top < '0px'){
 				_dragElement.style.top = '0px';
 			}
 
 			if(_dragElement.style.left < '0px'){
 				_dragElement.style.left = '0px';
-			}			
+			}
+			
 
+			//alert('\n ElementPosition = ' + elementRect.left + ',' + elementRect.top + ',' + elementRect.right + ',' + elementRect.bottom + '\n ContainerPosition = ' + containerRect.left + ',' + containerRect.top + ',' + containerRect.right + ',' + containerRect.bottom + '\n Position = ' + leftPos + ',' + topPos + ',' + rightPos + ',' + bottomPos);
     		
     		_dragElement.style.zIndex = _oldZIndex;
 
@@ -213,26 +226,16 @@
     		// grab the mouse position
         	_startX = e.clientX;
         	_startY = e.clientY;
-        	//alert("mouse position: " + _startX + ", " + _startY);
+        	//alert('mouse position: ' + _startX + ', ' + _startY);
         	
-        	// grab the clicked element's position
-			//_offsetX = ExtractNumber(target.style.left);
-        	//_offsetY = ExtractNumber(target.style.top);
-
-        	//_offsetX = ExtractNumber(target.getBoundingClientRect().left);
-        	//_offsetY = ExtractNumber(target.getBoundingClientRect().top);
-        	
-        	//alert("element position: " + target.style.left + ", " + target.style.top + ", "+ target.style.right + ", " + target.style.bottom);
-        	//alert("offset position: " + _offsetX + ", " + _offsetY);
-
         	let containerElement = document.getElementsByClassName('container')[0];
         	let containerRect = containerElement.getBoundingClientRect();
-        	//alert(" Container: left= " + containerRect.left + ", top= " + containerRect.top + ", right= " + containerRect.right + ", bottom= " + containerRect.bottom);
+        	//alert(' Container: left= ' + containerRect.left + ', top= ' + containerRect.top + ', right= ' + containerRect.right + ', bottom= ' + containerRect.bottom);
 
 
         	let rect = target.getBoundingClientRect(); 
-        	//alert("Drag Element: left= " + rect.left + ", top= " + rect.top + ", right= " + rect.right + ", bottom= " + rect.bottom);
-        	//alert("offsetXY = " + _offsetX + ", " + _offsetY + "\n TargetLeftTop = " + target.style.left + ", " + target.style.top);
+        	//alert('Drag Element: left= ' + rect.left + ', top= ' + rect.top + ', right= ' + rect.right + ', bottom= ' + rect.bottom);
+        	//alert('rect.LeftTopRightBottom = ' + rect.left + ', ' + rect.top + ', ' + rect.right + ', ' + rect.bottom + '\n containerRect.LeftTopRightBottom = ' + containerRect.left + ', ' + containerRect.top + ', ' + containerRect.right + ', ' + containerRect.bottom);
 
         	// bring the clicked element to the front while it is being dragged
         	_oldZIndex = target.style.zIndex;
